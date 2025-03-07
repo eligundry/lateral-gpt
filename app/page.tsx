@@ -1,35 +1,34 @@
-"use client"
+"use client";
 
-import { useState, useRef } from "react"
-import { useChat } from "ai/react"
-import { PlusCircle } from "lucide-react"
-import { Button } from "@/components/ui/button"
-import { ProfileCard } from "@/components/profile-card"
-import { ProfileModal } from "@/components/profile-modal"
-import type { Document } from "@/lib/types"
+import { useState } from "react";
+import { useChat } from "@ai-sdk/react";
+import { PlusCircle } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { ProfileCard } from "@/components/profile-card";
+import { ProfileModal } from "@/components/profile-modal";
+import type { Document } from "@/lib/types";
 
 export default function Home() {
-  const [selectedProfile, setSelectedProfile] = useState<Document | null>(null)
-  const { messages, input, handleInputChange, handleSubmit, isLoading, reload, stop } = useChat({
-    api: "/api/chat",
-  })
-
-  const textareaRef = useRef<HTMLTextAreaElement>(null)
+  const [selectedProfile, setSelectedProfile] = useState<Document | null>(null);
+  const { messages, input, handleInputChange, handleSubmit, status, stop } =
+    useChat({
+      api: "/api/chat",
+    });
 
   const handleNewChat = () => {
-    window.location.reload()
-  }
+    window.location.reload();
+  };
 
   const profiles = messages
     .filter((message) => message.role === "assistant")
     .flatMap((message) => {
       try {
-        const content = JSON.parse(message.content)
-        return Array.isArray(content) ? content : []
+        const content = JSON.parse(message.content);
+        return Array.isArray(content) ? content : [];
       } catch (e) {
-        return []
+        return [];
       }
-    })
+    });
 
   return (
     <div className="flex flex-col min-h-screen">
@@ -37,7 +36,11 @@ export default function Home() {
       <header className="sticky top-0 z-10 border-b bg-white">
         <div className="container flex items-center justify-between h-16">
           <h1 className="text-2xl font-bold text-primary">LateralGPT</h1>
-          <Button onClick={handleNewChat} variant="outline" className="flex items-center gap-2">
+          <Button
+            onClick={handleNewChat}
+            variant="outline"
+            className="flex items-center gap-2"
+          >
             <PlusCircle className="w-4 h-4" />
             New Chat
           </Button>
@@ -54,24 +57,31 @@ export default function Home() {
                 if (message.role === "user") {
                   return (
                     <div key={message.id} className="flex justify-end">
-                      <div className="bg-primary text-white p-3 rounded-lg max-w-[80%]">{message.content}</div>
+                      <div className="bg-primary text-white p-3 rounded-lg max-w-[80%]">
+                        {message.content}
+                      </div>
                     </div>
-                  )
+                  );
                 }
 
                 // Skip rendering JSON messages directly
-                if (message.content.startsWith("[") || message.content.startsWith("{")) {
-                  return null
+                if (
+                  message.content.startsWith("[") ||
+                  message.content.startsWith("{")
+                ) {
+                  return null;
                 }
 
                 return (
                   <div key={message.id} className="flex justify-start">
-                    <div className="bg-gray-100 p-3 rounded-lg max-w-[80%]">{message.content}</div>
+                    <div className="bg-gray-100 p-3 rounded-lg max-w-[80%]">
+                      {message.content}
+                    </div>
                   </div>
-                )
+                );
               })}
 
-              {isLoading && (
+              {status === "submitted" && (
                 <div className="flex justify-start">
                   <div className="bg-gray-100 p-3 rounded-lg">
                     <div className="flex space-x-2">
@@ -97,7 +107,11 @@ export default function Home() {
             {profiles.length > 0 && (
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
                 {profiles.map((profile) => (
-                  <ProfileCard key={profile.id} profile={profile} onClick={() => setSelectedProfile(profile)} />
+                  <ProfileCard
+                    key={profile.id}
+                    profile={profile}
+                    onClick={() => setSelectedProfile(profile)}
+                  />
                 ))}
               </div>
             )}
@@ -113,21 +127,20 @@ export default function Home() {
                   onChange={handleInputChange}
                   placeholder="Find me Harvard business grads that graduate next year..."
                   rows={1}
-                  onKeyDown={(e) => {
-                    if (e.key === "Enter" && !e.shiftKey) {
-                      e.preventDefault()
-                      if (input.trim() && !isLoading) {
-                        handleSubmit(e as any)
-                      }
-                    }
-                  }}
                 />
               </div>
               <div className="flex justify-end gap-2">
-                <Button type="submit" disabled={isLoading || !input.trim()}>
+                <Button
+                  type="submit"
+                  disabled={
+                    status === "submitted" ||
+                    status === "streaming" ||
+                    !input.trim()
+                  }
+                >
                   Send
                 </Button>
-                {isLoading && (
+                {status === "streaming" && (
                   <Button type="button" variant="outline" onClick={stop}>
                     Stop
                   </Button>
@@ -139,8 +152,12 @@ export default function Home() {
       </main>
 
       {/* Profile Modal */}
-      {selectedProfile && <ProfileModal profile={selectedProfile} onClose={() => setSelectedProfile(null)} />}
+      {selectedProfile && (
+        <ProfileModal
+          profile={selectedProfile}
+          onClose={() => setSelectedProfile(null)}
+        />
+      )}
     </div>
-  )
+  );
 }
-
