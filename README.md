@@ -9,6 +9,12 @@ In my personal apps, I configured the prompt to return MDX that I could render
 React components, but there are a lot of properties here and I don't trust
 OpenAI to send all the props right.
 
+_v0 aside_, this is my first time using it's full export with shadcn stuff and
+boy does it have a bunch of code smells that I do not like. Adding the full
+shadcn library, disabling typescript checking and a bunch of other things that
+do not happen when you use `pnpm shadcn` to install components piecemeal. Alas,
+this is what we have.
+
 I decided not to setup chat memory, so all chats are ephemeral. If I were to
 setup memory, I would "agent"-ify this with [mastra](https://mastra.ai/), which
 has memory built right in.
@@ -21,6 +27,9 @@ can pull up when emailing.
 _As an aside_, I really want to improve your search API such that all fields can
 be repeated! Having to do multiple tool calls for some queries (name, company,
 etc) but not for colleges is annoying.
+
+Overall, this took me 5 hours across two days. It's somewhat ugly, but it's
+a decent first draft.
 
 ## Running
 
