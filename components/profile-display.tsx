@@ -26,12 +26,13 @@ export function ProfileDisplay({
       <div className="grid grid-cols-[1fr_2fr] gap-6 mt-4">
         <div className="flex flex-col items-center">
           <div className="w-32 h-32 rounded-full overflow-hidden mb-3">
-            <Avatar>
+            <Avatar className="w-full h-full">
               <AvatarImage
                 src={profile.profile_pic_url ?? undefined}
                 alt={profile.full_name ?? undefined}
+                className="object-cover"
               />
-              <AvatarFallback>
+              <AvatarFallback className="text-2xl">
                 {profile.first_name?.[0]} {profile.last_name?.[0]}
               </AvatarFallback>
             </Avatar>
@@ -157,28 +158,36 @@ export function ProfileDisplay({
   return (
     <div className="bg-white rounded-lg shadow-md overflow-hidden max-w-4xl mx-auto">
       {/* Cover Image */}
-      <div className="h-48 bg-gray-200 relative">
-        {profile.background_cover_image_url && (
-          <Avatar>
-            <AvatarImage
-              src={profile.background_cover_image_url || "/placeholder.svg"}
-              alt="Cover"
-            />
-          </Avatar>
-        )}
-      </div>
+      {profile.background_cover_image_url && (
+        <div className="h-48 bg-gray-200 relative">
+          <div className="w-full h-full">
+            <Avatar className="w-full h-full rounded-none">
+              <AvatarImage
+                src={profile.background_cover_image_url}
+                alt="Cover"
+                className="object-cover w-full h-full"
+              />
+              <AvatarFallback className="bg-primary rounded-none" />
+            </Avatar>
+          </div>
+        </div>
+      )}
 
       {/* Profile Header */}
       <div className="px-8 pt-6 pb-4 flex flex-col md:flex-row gap-6">
         <div className="w-32 h-32 rounded-full overflow-hidden border-4 border-white -mt-16 relative z-10 mx-auto md:mx-0">
-          <Avatar>
+          <Avatar className="w-full h-full">
             <AvatarImage
               src={
                 profile.profile_pic_url ||
                 "/placeholder.svg?height=128&width=128"
               }
               alt={profile.full_name ?? undefined}
+              className="object-cover w-full h-full"
             />
+            <AvatarFallback className="text-2xl">
+              {profile.first_name?.[0]} {profile.last_name?.[0]}
+            </AvatarFallback>
           </Avatar>
         </div>
 
@@ -288,7 +297,7 @@ export function ProfileDisplay({
                     <Avatar className="w-full h-full">
                       <AvatarImage
                         src={edu.logo_url || undefined}
-                        alt={edu.school}
+                        alt={edu.school ?? undefined}
                         className="object-contain"
                       />
                       <AvatarFallback>{edu.school?.[0] || "S"}</AvatarFallback>
@@ -345,7 +354,7 @@ export function ProfileDisplay({
                     <Avatar className="w-full h-full">
                       <AvatarImage
                         src={vol.logo_url || undefined}
-                        alt={vol.company}
+                        alt={vol.company ?? undefined}
                         className="object-contain"
                       />
                       <AvatarFallback>{vol.company?.[0] || "V"}</AvatarFallback>

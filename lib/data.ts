@@ -18,7 +18,7 @@ export async function getProfileById(id: string): Promise<FullUserItem> {
     }
 
     const data = await response.json();
-    console.log(data.results[id]);
+    console.log(data.results[id].linkedin.people_also_viewed);
 
     // Validate the response with Zod
     const validatedData = FullUserResultsSchema.parse(data);

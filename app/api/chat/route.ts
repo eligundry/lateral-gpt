@@ -106,7 +106,7 @@ export async function POST(req: Request) {
 Current date: ${new Date().toLocaleDateString()}
 
 CAPABILITIES:
-- Search candidates by name, company, sector, title, role, education, location, etc.
+- Search candidates by name, current company, past company, sector, title, role, education, location, etc.
 - Understand time references (e.g., "next year" = ${new Date().getFullYear() + 1})
 - Provide concise result summaries
 - Expand school groups and geographic regions
