@@ -4,15 +4,13 @@ import { Message as AIMessage } from "@ai-sdk/react";
 
 interface MessageProps {
   message: AIMessage;
-  setSelectedProfile: (profile: Document) => void;
 }
 
 interface SearchResultsProps {
   results: any[];
-  setSelectedProfile: (profile: Document) => void;
 }
 
-function SearchResults({ results, setSelectedProfile }: SearchResultsProps) {
+function SearchResults({ results }: SearchResultsProps) {
   if (!Array.isArray(results)) {
     return (
       <div className="flex justify-start">
@@ -37,18 +35,14 @@ function SearchResults({ results, setSelectedProfile }: SearchResultsProps) {
     <div className="w-full">
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
         {results.map((profile) => (
-          <ProfileCard
-            key={profile.id}
-            profile={profile}
-            onClick={() => setSelectedProfile(profile)}
-          />
+          <ProfileCard key={profile.id} profile={profile} />
         ))}
       </div>
     </div>
   );
 }
 
-export function Message({ message, setSelectedProfile }: MessageProps) {
+export function Message({ message }: MessageProps) {
   // User message
   if (message.role === "user") {
     return (
@@ -100,11 +94,7 @@ export function Message({ message, setSelectedProfile }: MessageProps) {
 
       // Return a single SearchResults component with all unique results
       return (
-        <SearchResults
-          key="combined-search-results"
-          results={uniqueResults}
-          setSelectedProfile={setSelectedProfile}
-        />
+        <SearchResults key="combined-search-results" results={uniqueResults} />
       );
     }
   }

@@ -1,16 +1,12 @@
 "use client";
 
-import { useState } from "react";
 import { useChat } from "@ai-sdk/react";
 import { PlusCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ProfileCard } from "@/components/profile-card";
-import { ProfileModal } from "@/components/profile-modal";
 import { Message } from "@/components/message";
-import type { Document } from "@/lib/types";
 
 export default function Home() {
-  const [selectedProfile, setSelectedProfile] = useState<Document | null>(null);
   const { messages, input, handleInputChange, handleSubmit, status, stop } =
     useChat({
       api: "/api/chat",
@@ -19,8 +15,6 @@ export default function Home() {
   const handleNewChat = () => {
     window.location.reload();
   };
-
-  console.log(messages);
 
   const profiles = messages
     .filter((message) => message.role === "assistant")
@@ -58,10 +52,7 @@ export default function Home() {
             <div className="space-y-4 mb-6">
               {messages.map((message) => (
                 <div key={message.id}>
-                  <Message
-                    message={message}
-                    setSelectedProfile={setSelectedProfile}
-                  />
+                  <Message message={message} />
                 </div>
               ))}
 
@@ -91,11 +82,7 @@ export default function Home() {
             {profiles.length > 0 && (
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
                 {profiles.map((profile) => (
-                  <ProfileCard
-                    key={profile.id}
-                    profile={profile}
-                    onClick={() => setSelectedProfile(profile)}
-                  />
+                  <ProfileCard key={profile.id} profile={profile} />
                 ))}
               </div>
             )}
@@ -134,14 +121,6 @@ export default function Home() {
           </div>
         </div>
       </main>
-
-      {/* Profile Modal */}
-      {selectedProfile && (
-        <ProfileModal
-          profile={selectedProfile}
-          onClose={() => setSelectedProfile(null)}
-        />
-      )}
     </div>
   );
 }
