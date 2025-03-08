@@ -198,7 +198,7 @@ export function ProfileDisplay({
           <div className="flex items-center gap-2 mt-2 justify-center md:justify-start">
             <MapPin className="w-4 h-4 text-gray-500" />
             <span className="text-gray-600">
-              {profile.city}, {profile.state}, {profile.country_full_name}
+              {[profile.city, profile.state].filter(Boolean).join(", ")}
             </span>
           </div>
 
