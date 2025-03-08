@@ -18,7 +18,6 @@ export async function getProfileById(id: string): Promise<FullUserItem> {
     }
 
     const data = await response.json();
-    console.log(data.results[id].linkedin.people_also_viewed);
 
     // Validate the response with Zod
     const validatedData = FullUserResultsSchema.parse(data);
@@ -28,7 +27,7 @@ export async function getProfileById(id: string): Promise<FullUserItem> {
       throw new Error("Profile not found");
     }
 
-    return validatedData.results[id].linkedin;
+    return { ...validatedData.results[id].linkedin, id };
   } catch (error) {
     console.error("Error fetching profile:", error);
     throw error;

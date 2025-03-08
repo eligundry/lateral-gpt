@@ -20,6 +20,8 @@ export function ProfileDisplay({
   profile,
   isModal = false,
 }: ProfileDisplayProps) {
+  console.log({ profile });
+
   // If it's a modal, show a condensed version
   if (isModal) {
     return (
@@ -32,7 +34,7 @@ export function ProfileDisplay({
                 alt={profile.full_name ?? undefined}
                 className="object-cover"
               />
-              <AvatarFallback className="text-2xl">
+              <AvatarFallback>
                 {profile.first_name?.[0]} {profile.last_name?.[0]}
               </AvatarFallback>
             </Avatar>
@@ -41,7 +43,7 @@ export function ProfileDisplay({
           <div className="flex items-center gap-1 text-sm text-gray-600 mb-1">
             <MapPin className="w-3 h-3" />
             <span>
-              {profile.city}, {profile.state}
+              {[profile.city, profile.state].filter(Boolean).join(", ")}
             </span>
           </div>
 
@@ -64,15 +66,18 @@ export function ProfileDisplay({
             </Link>
           )}
 
-          <Link
-            href={`/profile/${profile.public_identifier}`}
-            className="w-full mt-2"
-            prefetch={false}
-          >
-            <Button variant="outline" className="w-full">
-              Full Profile
-            </Button>
-          </Link>
+          {profile.id && (
+            <Link
+              href={`/profile/${profile.id}`}
+              className="w-full mt-2"
+              prefetch={false}
+              target="_blank"
+            >
+              <Button variant="outline" className="w-full">
+                Full Profile
+              </Button>
+            </Link>
+          )}
         </div>
 
         <div className="space-y-6">
@@ -158,30 +163,25 @@ export function ProfileDisplay({
   return (
     <div className="bg-white rounded-lg shadow-md overflow-hidden max-w-4xl mx-auto">
       {/* Cover Image */}
-      {profile.background_cover_image_url && (
-        <div className="h-48 bg-gray-200 relative">
-          <div className="w-full h-full">
-            <Avatar className="w-full h-full rounded-none">
-              <AvatarImage
-                src={profile.background_cover_image_url}
-                alt="Cover"
-                className="object-cover w-full h-full"
-              />
-              <AvatarFallback className="bg-primary rounded-none" />
-            </Avatar>
-          </div>
+      <div className="h-48 bg-gray-200 relative">
+        <div className="w-full h-full">
+          <Avatar className="w-full h-full rounded-none">
+            <AvatarImage
+              src={profile.background_cover_image_url ?? undefined}
+              alt="Cover"
+              className="object-cover w-full h-full"
+            />
+            <AvatarFallback className="bg-primary rounded-none" />
+          </Avatar>
         </div>
-      )}
+      </div>
 
       {/* Profile Header */}
       <div className="px-8 pt-6 pb-4 flex flex-col md:flex-row gap-6">
         <div className="w-32 h-32 rounded-full overflow-hidden border-4 border-white -mt-16 relative z-10 mx-auto md:mx-0">
           <Avatar className="w-full h-full">
             <AvatarImage
-              src={
-                profile.profile_pic_url ||
-                "/placeholder.svg?height=128&width=128"
-              }
+              src={profile.profile_pic_url ?? undefined}
               alt={profile.full_name ?? undefined}
               className="object-cover w-full h-full"
             />
@@ -364,7 +364,7 @@ export function ProfileDisplay({
                   <div>
                     <h3 className="font-medium">{vol.title}</h3>
                     <p className="text-gray-600">
-                      {vol.company} • {vol.cause}
+                      {[vol.company, vol.cause].filter(Boolean).join(" • ")}
                     </p>
                     <p className="text-sm text-gray-500">
                       {vol.starts_at

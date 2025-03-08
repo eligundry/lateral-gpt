@@ -1,13 +1,18 @@
-import { getProfileById } from "@/lib/data"
-import { ProfileDisplay } from "@/components/profile-display"
-import { Button } from "@/components/ui/button"
-import { ArrowLeft } from "lucide-react"
-import Link from "next/link"
-import { notFound } from "next/navigation"
+import { getProfileById } from "@/lib/data";
+import { ProfileDisplay } from "@/components/profile-display";
+import { Button } from "@/components/ui/button";
+import { ArrowLeft } from "lucide-react";
+import Link from "next/link";
+import { notFound } from "next/navigation";
 
-export default async function ProfilePage({ params }: { params: { id: string } }) {
+export default async function ProfilePage({
+  params: paramsPromise,
+}: {
+  params: Promise<{ id: string }>;
+}) {
+  const params = await paramsPromise;
   try {
-    const profile = await getProfileById(params.id)
+    const profile = await getProfileById(params.id);
 
     return (
       <div className="min-h-screen bg-gray-50">
@@ -28,24 +33,30 @@ export default async function ProfilePage({ params }: { params: { id: string } }
           <ProfileDisplay profile={profile} />
         </main>
       </div>
-    )
+    );
   } catch (error) {
-    notFound()
+    notFound();
   }
 }
 
-export async function generateMetadata({ params }: { params: { id: string } }) {
+export async function generateMetadata({
+  params: paramsPromise,
+}: {
+  params: Promise<{ id: string }>;
+}) {
+  const params = await paramsPromise;
   try {
-    const profile = await getProfileById(params.id)
+    const profile = await getProfileById(params.id);
     return {
       title: `${profile.full_name} | LateralGPT`,
-      description: profile.headline || `View ${profile.full_name}'s professional profile on LateralGPT`,
-    }
+      description:
+        profile.headline ||
+        `View ${profile.full_name}'s professional profile on LateralGPT`,
+    };
   } catch (error) {
     return {
       title: "Profile | LateralGPT",
       description: "View professional profile on LateralGPT",
-    }
+    };
   }
 }
-

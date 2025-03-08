@@ -133,6 +133,7 @@ export const ExperienceSchema = z.object({
 
 // Full User Item schema
 export const FullUserItemSchema = z.object({
+  id: z.string().nullable().optional(),
   accomplishment_patents: z.array(z.any()),
   country: z.string().nullable().optional(),
   education: z.array(EducationSchema),

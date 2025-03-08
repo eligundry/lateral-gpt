@@ -33,7 +33,13 @@ export function ProfileCard({ profile }: ProfileCardProps) {
           </AvatarFallback>
         </Avatar>
         <h3 className="font-medium text-center">{profile.full_name}</h3>
-        <p className="text-sm text-gray-600 text-center">{profile.title}</p>
+        {profile.title && (
+          <p className="text-sm text-gray-600 text-center">
+            {[profile.title, profile.current_company?.company]
+              .filter(Boolean)
+              .join(" at ")}
+          </p>
+        )}
         <p className="text-sm text-gray-600 text-center">{profile.school}</p>
         <p className="text-sm text-gray-600 text-center">{profile.city}</p>
 
@@ -41,12 +47,6 @@ export function ProfileCard({ profile }: ProfileCardProps) {
           <Button asChild variant="outline" className="flex-1">
             <Link href={`/profile/${profile.id}`}>View Profile</Link>
           </Button>
-
-          <Link href={`/profile/${profile.id}`} className="flex-1">
-            <Button variant="outline" className="w-full">
-              Share
-            </Button>
-          </Link>
         </div>
 
         {profile.linkedin && (
