@@ -18,6 +18,10 @@ The use case being that you are an executive recruiter and you want one of your
 underlings to actually reach out, so you give them a list of profiles that they
 can pull up when emailing.
 
+_As an aside_, I really want to improve your search API such that all fields can
+be repeated! Having to do multiple tool calls for some queries (name, company,
+etc) but not for colleges is annoying.
+
 ## Running
 
 Create a `.env` with an `OPENAI_API_KEY` set.
