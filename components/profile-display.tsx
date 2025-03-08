@@ -1,29 +1,40 @@
-import type { FullUserItem } from "@/lib/types"
-import { Button } from "@/components/ui/button"
-import { Linkedin, Briefcase, GraduationCap, MapPin, Users, Award } from "lucide-react"
-import Link from "next/link"
+import type { FullUserItem } from "@/lib/types";
+import { Button } from "@/components/ui/button";
+import {
+  Linkedin,
+  Briefcase,
+  GraduationCap,
+  MapPin,
+  Users,
+  Award,
+} from "lucide-react";
+import Link from "next/link";
+import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 
 interface ProfileDisplayProps {
-  profile: FullUserItem
-  isModal?: boolean
+  profile: FullUserItem;
+  isModal?: boolean;
 }
 
-export function ProfileDisplay({ profile, isModal = false }: ProfileDisplayProps) {
+export function ProfileDisplay({
+  profile,
+  isModal = false,
+}: ProfileDisplayProps) {
   // If it's a modal, show a condensed version
   if (isModal) {
     return (
       <div className="grid grid-cols-[1fr_2fr] gap-6 mt-4">
         <div className="flex flex-col items-center">
           <div className="w-32 h-32 rounded-full overflow-hidden mb-3">
-            <img
-              src={profile.profile_pic_url || "/placeholder.svg?height=128&width=128"}
-              alt={profile.full_name}
-              className="w-full h-full object-cover"
-              onError={(e) => {
-                const target = e.target as HTMLImageElement
-                target.src = "/placeholder.svg?height=128&width=128"
-              }}
-            />
+            <Avatar>
+              <AvatarImage
+                src={profile.profile_pic_url ?? undefined}
+                alt={profile.full_name ?? undefined}
+              />
+              <AvatarFallback>
+                {profile.first_name?.[0]} {profile.last_name?.[0]}
+              </AvatarFallback>
+            </Avatar>
           </div>
 
           <div className="flex items-center gap-1 text-sm text-gray-600 mb-1">
@@ -39,7 +50,12 @@ export function ProfileDisplay({ profile, isModal = false }: ProfileDisplayProps
           </div>
 
           {profile.linkedin && (
-            <Link href={profile.linkedin} target="_blank" rel="noopener noreferrer" className="w-full">
+            <Link
+              href={profile.linkedin}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="w-full"
+            >
               <Button className="w-full bg-[#0077b5] hover:bg-[#0069a1] text-white flex items-center gap-2">
                 <Linkedin className="w-4 h-4" />
                 View LinkedIn
@@ -47,7 +63,11 @@ export function ProfileDisplay({ profile, isModal = false }: ProfileDisplayProps
             </Link>
           )}
 
-          <Link href={`/profile/${profile.public_identifier}`} className="w-full mt-2" prefetch={false}>
+          <Link
+            href={`/profile/${profile.public_identifier}`}
+            className="w-full mt-2"
+            prefetch={false}
+          >
             <Button variant="outline" className="w-full">
               Full Profile
             </Button>
@@ -80,13 +100,20 @@ export function ProfileDisplay({ profile, isModal = false }: ProfileDisplayProps
                     <p className="font-medium">{exp.title}</p>
                     <p className="text-sm">{exp.company}</p>
                     <p className="text-xs text-gray-500">
-                      {exp.starts_at ? `${exp.starts_at.month}/${exp.starts_at.year}` : ""} -
-                      {exp.ends_at ? ` ${exp.ends_at.month}/${exp.ends_at.year}` : " Present"}
+                      {exp.starts_at
+                        ? `${exp.starts_at.month}/${exp.starts_at.year}`
+                        : ""}{" "}
+                      -
+                      {exp.ends_at
+                        ? ` ${exp.ends_at.month}/${exp.ends_at.year}`
+                        : " Present"}
                     </p>
                   </div>
                 ))}
                 {profile.experiences.length > 3 && (
-                  <p className="text-xs text-primary">+{profile.experiences.length - 3} more experiences</p>
+                  <p className="text-xs text-primary">
+                    +{profile.experiences.length - 3} more experiences
+                  </p>
                 )}
               </div>
             </div>
@@ -104,11 +131,17 @@ export function ProfileDisplay({ profile, isModal = false }: ProfileDisplayProps
                   <div key={index}>
                     <p className="font-medium">{edu.school}</p>
                     <p className="text-sm">
-                      {edu.degree_name} {edu.field_of_study && `in ${edu.field_of_study}`}
+                      {edu.degree_name}{" "}
+                      {edu.field_of_study && `in ${edu.field_of_study}`}
                     </p>
                     <p className="text-xs text-gray-500">
-                      {edu.starts_at ? `${edu.starts_at.month}/${edu.starts_at.year}` : ""} -
-                      {edu.ends_at ? ` ${edu.ends_at.month}/${edu.ends_at.year}` : " Present"}
+                      {edu.starts_at
+                        ? `${edu.starts_at.month}/${edu.starts_at.year}`
+                        : ""}{" "}
+                      -
+                      {edu.ends_at
+                        ? ` ${edu.ends_at.month}/${edu.ends_at.year}`
+                        : " Present"}
                     </p>
                   </div>
                 ))}
@@ -117,7 +150,7 @@ export function ProfileDisplay({ profile, isModal = false }: ProfileDisplayProps
           )}
         </div>
       </div>
-    )
+    );
   }
 
   // Full profile display
@@ -126,30 +159,27 @@ export function ProfileDisplay({ profile, isModal = false }: ProfileDisplayProps
       {/* Cover Image */}
       <div className="h-48 bg-gray-200 relative">
         {profile.background_cover_image_url && (
-          <img
-            src={profile.background_cover_image_url || "/placeholder.svg"}
-            alt="Cover"
-            className="w-full h-full object-cover"
-            onError={(e) => {
-              const target = e.target as HTMLImageElement
-              target.src = "/placeholder.svg?height=192&width=768"
-            }}
-          />
+          <Avatar>
+            <AvatarImage
+              src={profile.background_cover_image_url || "/placeholder.svg"}
+              alt="Cover"
+            />
+          </Avatar>
         )}
       </div>
 
       {/* Profile Header */}
       <div className="px-8 pt-6 pb-4 flex flex-col md:flex-row gap-6">
         <div className="w-32 h-32 rounded-full overflow-hidden border-4 border-white -mt-16 relative z-10 mx-auto md:mx-0">
-          <img
-            src={profile.profile_pic_url || "/placeholder.svg?height=128&width=128"}
-            alt={profile.full_name}
-            className="w-full h-full object-cover"
-            onError={(e) => {
-              const target = e.target as HTMLImageElement
-              target.src = "/placeholder.svg?height=128&width=128"
-            }}
-          />
+          <Avatar>
+            <AvatarImage
+              src={
+                profile.profile_pic_url ||
+                "/placeholder.svg?height=128&width=128"
+              }
+              alt={profile.full_name ?? undefined}
+            />
+          </Avatar>
         </div>
 
         <div className="flex-1 text-center md:text-left">
@@ -165,11 +195,18 @@ export function ProfileDisplay({ profile, isModal = false }: ProfileDisplayProps
 
           <div className="flex items-center gap-2 mt-1 justify-center md:justify-start">
             <Users className="w-4 h-4 text-gray-500" />
-            <span className="text-gray-600">{profile.connections.toLocaleString()} connections</span>
+            <span className="text-gray-600">
+              {profile.connections.toLocaleString()} connections
+            </span>
           </div>
 
           {profile.linkedin && (
-            <Link href={profile.linkedin} target="_blank" rel="noopener noreferrer" className="mt-4 inline-block">
+            <Link
+              href={profile.linkedin}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="mt-4 inline-block"
+            >
               <Button className="bg-[#0077b5] hover:bg-[#0069a1] text-white flex items-center gap-2">
                 <Linkedin className="w-4 h-4" />
                 View LinkedIn Profile
@@ -184,7 +221,9 @@ export function ProfileDisplay({ profile, isModal = false }: ProfileDisplayProps
         {profile.summary && (
           <div className="mb-8">
             <h2 className="text-xl font-semibold mb-3">About</h2>
-            <p className="text-gray-700 whitespace-pre-line">{profile.summary}</p>
+            <p className="text-gray-700 whitespace-pre-line">
+              {profile.summary}
+            </p>
           </div>
         )}
 
@@ -200,27 +239,33 @@ export function ProfileDisplay({ profile, isModal = false }: ProfileDisplayProps
               {profile.experiences.map((exp, index) => (
                 <div key={index} className="flex gap-4">
                   <div className="w-12 h-12 flex-shrink-0">
-                    <img
-                      src={exp.logo_url || "/placeholder.svg?height=48&width=48"}
-                      alt={exp.company}
-                      className="w-full h-full object-contain"
-                      onError={(e) => {
-                        const target = e.target as HTMLImageElement
-                        target.src = "/placeholder.svg?height=48&width=48"
-                      }}
-                    />
+                    <Avatar className="w-full h-full">
+                      <AvatarImage
+                        src={exp.logo_url || undefined}
+                        alt={exp.company ?? undefined}
+                        className="object-contain"
+                      />
+                      <AvatarFallback>{exp.company?.[0] || "C"}</AvatarFallback>
+                    </Avatar>
                   </div>
 
                   <div>
                     <h3 className="font-medium">{exp.title}</h3>
                     <p className="text-gray-600">{exp.company}</p>
                     <p className="text-sm text-gray-500">
-                      {exp.starts_at ? `${exp.starts_at.month}/${exp.starts_at.year}` : ""} -
-                      {exp.ends_at ? ` ${exp.ends_at.month}/${exp.ends_at.year}` : " Present"}
+                      {exp.starts_at
+                        ? `${exp.starts_at.month}/${exp.starts_at.year}`
+                        : ""}{" "}
+                      -
+                      {exp.ends_at
+                        ? ` ${exp.ends_at.month}/${exp.ends_at.year}`
+                        : " Present"}
                     </p>
                     <p className="text-sm text-gray-500">{exp.location}</p>
 
-                    {exp.description && <p className="mt-2 text-gray-700">{exp.description}</p>}
+                    {exp.description && (
+                      <p className="mt-2 text-gray-700">{exp.description}</p>
+                    )}
                   </div>
                 </div>
               ))}
@@ -240,34 +285,44 @@ export function ProfileDisplay({ profile, isModal = false }: ProfileDisplayProps
               {profile.education.map((edu, index) => (
                 <div key={index} className="flex gap-4">
                   <div className="w-12 h-12 flex-shrink-0">
-                    <img
-                      src={edu.logo_url || "/placeholder.svg?height=48&width=48"}
-                      alt={edu.school}
-                      className="w-full h-full object-contain"
-                      onError={(e) => {
-                        const target = e.target as HTMLImageElement
-                        target.src = "/placeholder.svg?height=48&width=48"
-                      }}
-                    />
+                    <Avatar className="w-full h-full">
+                      <AvatarImage
+                        src={edu.logo_url || undefined}
+                        alt={edu.school}
+                        className="object-contain"
+                      />
+                      <AvatarFallback>{edu.school?.[0] || "S"}</AvatarFallback>
+                    </Avatar>
                   </div>
 
                   <div>
                     <h3 className="font-medium">{edu.school}</h3>
                     <p className="text-gray-600">
-                      {edu.degree_name} {edu.field_of_study && `in ${edu.field_of_study}`}
+                      {edu.degree_name}{" "}
+                      {edu.field_of_study && `in ${edu.field_of_study}`}
                     </p>
                     <p className="text-sm text-gray-500">
-                      {edu.starts_at ? `${edu.starts_at.month}/${edu.starts_at.year}` : ""} -
-                      {edu.ends_at ? ` ${edu.ends_at.month}/${edu.ends_at.year}` : " Present"}
+                      {edu.starts_at
+                        ? `${edu.starts_at.month}/${edu.starts_at.year}`
+                        : ""}{" "}
+                      -
+                      {edu.ends_at
+                        ? ` ${edu.ends_at.month}/${edu.ends_at.year}`
+                        : " Present"}
                     </p>
 
                     {edu.activities_and_societies && (
                       <p className="mt-1 text-sm text-gray-600">
-                        <span className="font-medium">Activities and Societies:</span> {edu.activities_and_societies}
+                        <span className="font-medium">
+                          Activities and Societies:
+                        </span>{" "}
+                        {edu.activities_and_societies}
                       </p>
                     )}
 
-                    {edu.description && <p className="mt-2 text-gray-700">{edu.description}</p>}
+                    {edu.description && (
+                      <p className="mt-2 text-gray-700">{edu.description}</p>
+                    )}
                   </div>
                 </div>
               ))}
@@ -287,15 +342,14 @@ export function ProfileDisplay({ profile, isModal = false }: ProfileDisplayProps
               {profile.volunteer_work.map((vol, index) => (
                 <div key={index} className="flex gap-4">
                   <div className="w-12 h-12 flex-shrink-0">
-                    <img
-                      src={vol.logo_url || "/placeholder.svg?height=48&width=48"}
-                      alt={vol.company}
-                      className="w-full h-full object-contain"
-                      onError={(e) => {
-                        const target = e.target as HTMLImageElement
-                        target.src = "/placeholder.svg?height=48&width=48"
-                      }}
-                    />
+                    <Avatar className="w-full h-full">
+                      <AvatarImage
+                        src={vol.logo_url || undefined}
+                        alt={vol.company}
+                        className="object-contain"
+                      />
+                      <AvatarFallback>{vol.company?.[0] || "V"}</AvatarFallback>
+                    </Avatar>
                   </div>
 
                   <div>
@@ -304,11 +358,18 @@ export function ProfileDisplay({ profile, isModal = false }: ProfileDisplayProps
                       {vol.company} • {vol.cause}
                     </p>
                     <p className="text-sm text-gray-500">
-                      {vol.starts_at ? `${vol.starts_at.month}/${vol.starts_at.year}` : ""} -
-                      {vol.ends_at ? ` ${vol.ends_at.month}/${vol.ends_at.year}` : " Present"}
+                      {vol.starts_at
+                        ? `${vol.starts_at.month}/${vol.starts_at.year}`
+                        : ""}{" "}
+                      -
+                      {vol.ends_at
+                        ? ` ${vol.ends_at.month}/${vol.ends_at.year}`
+                        : " Present"}
                     </p>
 
-                    {vol.description && <p className="mt-2 text-gray-700">{vol.description}</p>}
+                    {vol.description && (
+                      <p className="mt-2 text-gray-700">{vol.description}</p>
+                    )}
                   </div>
                 </div>
               ))}
@@ -317,6 +378,5 @@ export function ProfileDisplay({ profile, isModal = false }: ProfileDisplayProps
         )}
       </div>
     </div>
-  )
+  );
 }
-

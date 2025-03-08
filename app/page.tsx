@@ -6,6 +6,7 @@ import { PlusCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ProfileCard } from "@/components/profile-card";
 import { ProfileModal } from "@/components/profile-modal";
+import { Message } from "@/components/message";
 import type { Document } from "@/lib/types";
 
 export default function Home() {
@@ -18,6 +19,8 @@ export default function Home() {
   const handleNewChat = () => {
     window.location.reload();
   };
+
+  console.log(messages);
 
   const profiles = messages
     .filter((message) => message.role === "assistant")
@@ -53,33 +56,14 @@ export default function Home() {
           {/* Messages - Scrollable area */}
           <div className="flex-1 overflow-y-auto py-8 pb-4">
             <div className="space-y-4 mb-6">
-              {messages.map((message) => {
-                if (message.role === "user") {
-                  return (
-                    <div key={message.id} className="flex justify-end">
-                      <div className="bg-primary text-white p-3 rounded-lg max-w-[80%]">
-                        {message.content}
-                      </div>
-                    </div>
-                  );
-                }
-
-                // Skip rendering JSON messages directly
-                if (
-                  message.content.startsWith("[") ||
-                  message.content.startsWith("{")
-                ) {
-                  return null;
-                }
-
-                return (
-                  <div key={message.id} className="flex justify-start">
-                    <div className="bg-gray-100 p-3 rounded-lg max-w-[80%]">
-                      {message.content}
-                    </div>
-                  </div>
-                );
-              })}
+              {messages.map((message) => (
+                <div key={message.id}>
+                  <Message
+                    message={message}
+                    setSelectedProfile={setSelectedProfile}
+                  />
+                </div>
+              ))}
 
               {status === "submitted" && (
                 <div className="flex justify-start">
